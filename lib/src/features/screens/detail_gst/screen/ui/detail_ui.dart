@@ -128,23 +128,28 @@ class _DetailUiState extends State<DetailUi> {
   Container juridiction() {
     return Container(
       margin: EdgeInsets.only(left: 20, right: 20),
-      child: StreamBuilder<GstModel>(
-        stream: detailBloc.gstDetailStream,
-        builder: (context, snap) => Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SingleJuridiction(
-                title: Strings.stateJuridiction,
-                value: snap?.data?.stateJuridiction ?? '--'),
-            SingleJuridiction(
-                title: Strings.centerJuridiction,
-                value: snap?.data?.centerJuridiction ?? '--'),
-            SingleJuridiction(
-                title: Strings.taxPayerType,
-                value: snap?.data?.taxpayerType ?? '--'),
-          ],
-        ),
-      ),
+      child: BlocBuilder<SearchCubit, SearchState>(
+          bloc: BlocProvider.of<SearchCubit>(context),
+          builder: (context, state) {
+            var stateJuti = "--";
+            var centerJjuri = "--";
+            var taxPay = "--";
+            if (state is SearchLoaded) {
+              stateJuti = state.gstModel.stateJuridiction;
+              centerJjuri = state.gstModel.centerJuridiction;
+              taxPay = state.gstModel.taxpayerType;
+            }
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SingleJuridiction(
+                    title: Strings.stateJuridiction, value: stateJuti),
+                SingleJuridiction(
+                    title: Strings.centerJuridiction, value: centerJjuri),
+                SingleJuridiction(title: Strings.taxPayerType, value: taxPay),
+              ],
+            );
+          }),
     );
   }
 
@@ -175,17 +180,22 @@ class _DetailUiState extends State<DetailUi> {
             ),
           ),
           SizedBox(height: 5),
-          StreamBuilder<GstModel>(
-            stream: detailBloc.gstDetailStream,
-            builder: (context, snap) => Text(
-              snap?.data?.gstin ?? '--',
-              style: TextStyle(
-                color: AppColors.white,
-                fontWeight: FontWeights.w600,
-                fontSize: FontSizes.large,
-              ),
-            ),
-          ),
+          BlocBuilder<SearchCubit, SearchState>(
+              bloc: BlocProvider.of<SearchCubit>(context),
+              builder: (context, state) {
+                var gstin = "--";
+                if (state is SearchLoaded) {
+                  gstin = state.gstModel.gstin;
+                }
+                return Text(
+                  gstin,
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontWeight: FontWeights.w600,
+                    fontSize: FontSizes.large,
+                  ),
+                );
+              }),
           SizedBox(height: 10),
           Text(
             Strings.masterIndia,

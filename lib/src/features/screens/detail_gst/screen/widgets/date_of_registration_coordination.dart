@@ -22,20 +22,26 @@ class DateOfRegistrationCoordination extends StatelessWidget {
       margin: EdgeInsets.only(left: 20, right: 20),
       padding: EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
       width: double.infinity,
-      child: StreamBuilder<GstModel>(
-          stream: detailBloc.gstDetailStream,
-          builder: (context, snapshot) {
+      child: BlocBuilder<SearchCubit, SearchState>(
+          bloc: BlocProvider.of<SearchCubit>(context),
+          builder: (context, state) {
+            var registration = "--";
+            var coordination = "--";
+            if (state is SearchLoaded) {
+              registration = state.gstModel.date.registration;
+              coordination = state.gstModel.date.coordination;
+            }
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SingleDate(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     title: Strings.dateOfRegistration,
-                    value: snapshot?.data?.date?.registration ?? '--'),
+                    value: registration),
                 SingleDate(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     title: Strings.dateOfCoordination,
-                    value: snapshot?.data?.date?.coordination ?? '--'),
+                    value: coordination),
               ],
             );
           }),

@@ -21,31 +21,31 @@ class _TextFormFieldsState extends State<TextFormFields> {
       decoration: BoxDecoration(
         color: AppColors.grey,
       ),
-      child: StreamBuilder<String>(
-        stream: searchBloc.gstinStream,
-        builder: (context, snapshot) => TextFormField(
-          style: TextStyle(
+      child: TextField(
+        style: TextStyle(
+          fontSize: FontSizes.medium,
+          color: AppColors.darkGrey,
+        ),
+        maxLength: 15,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9]'))
+        ],
+        onChanged: (gstin) => onChanged(context, gstin),
+        decoration: InputDecoration(
+          counterText: '',
+          hintStyle: TextStyle(
             fontSize: FontSizes.medium,
             color: AppColors.darkGrey,
           ),
-          maxLength: 15,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(searchBloc.resExp))
-          ],
-          onChanged: (string) {
-            searchBloc.gstinStreamSet = string;
-          },
-          decoration: InputDecoration(
-            counterText: '',
-            hintStyle: TextStyle(
-              fontSize: FontSizes.medium,
-              color: AppColors.darkGrey,
-            ),
-            hintText: Strings.gstHint,
-            border: InputBorder.none,
-          ),
+          hintText: Strings.gstHint,
+          border: InputBorder.none,
         ),
       ),
     );
+  }
+
+  void onChanged(BuildContext context, String gstin) {
+    final searchCubit = BlocProvider.of<SearchCubit>(context);
+    searchCubit.setGstin(gstin);
   }
 }

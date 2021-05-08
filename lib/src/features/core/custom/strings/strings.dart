@@ -28,4 +28,6 @@ class Strings {
   static const pleaseEnterGstin = 'Please Enter Gstin ';
 
   static const unknownException = "Unknown Exception: ";
+  static const noInternet = "No internet connection";
+  static const badRequest = "Bad request";
 }

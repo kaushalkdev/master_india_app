@@ -23,15 +23,16 @@ export 'src/features/core/custom/strings/strings.dart';
 export 'src/features/core/custom/strings/assets_strings.dart';
 
 //models
-export 'src/features/screens/detail_gst/model/gst_model.dart';
+export 'src/features/screens/search_gst/model/gst_model.dart';
+export 'src/features/screens/search_gst/model/ropository.dart';
 
 //screens
 export 'src/features/screens/search_gst/screen/ui/search_ui.dart';
 export 'src/features/screens/detail_gst/screen/ui/detail_ui.dart';
 
 //bloc
-export 'src/features/screens/search_gst/bloc/search_bloc.dart';
-export 'src/features/screens/detail_gst/bloc/detail_bloc.dart';
+export 'src/features/screens/search_gst/cubit/search_cubit.dart';
 
 //third party libraries
 export 'package:rxdart/rxdart.dart' hide Notification;
+export 'package:flutter_bloc/flutter_bloc.dart';

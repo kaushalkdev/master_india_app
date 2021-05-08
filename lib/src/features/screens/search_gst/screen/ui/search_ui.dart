@@ -9,20 +9,26 @@ class SearchUi extends StatefulWidget {
 class _SearchUiState extends State<SearchUi> {
   String selected = Strings.searchGstNo;
   var _scaffoldKey = GlobalKey<ScaffoldState>();
-  @override
-  void initState() {
-    super.initState();
-    searchBloc.loadingBool = false;
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.white,
-      body: StreamBuilder(
-        stream: searchBloc.loadingBoolStream,
-        builder: (context, snapshot) => Stack(
+      body: BlocConsumer<SearchCubit, SearchState>(listener: (context, state) {
+        if (state is SearchError) {
+          Functions.showDialog(
+            context,
+            _scaffoldKey,
+            state.message,
+          );
+        }
+
+        if (state is SearchLoaded) {
+          Functions.navigateTo(context, DetailUi());
+        }
+      }, builder: (context, state) {
+        return Stack(
           children: [
             Column(
               children: [
@@ -38,10 +44,10 @@ class _SearchUiState extends State<SearchUi> {
                 ),
               ],
             ),
-            if (snapshot.data ?? false) Functions.showLoader(context),
+            if (state is SearchLoading) Functions.showLoader(context),
           ],
-        ),
-      ),
+        );
+      }),
     );
   }
 
@@ -102,24 +108,10 @@ class _SearchUiState extends State<SearchUi> {
       buttonText: Strings.searchButton,
       onTap: () async {
         FocusScope.of(context).unfocus();
+        final searchCubit = BlocProvider.of<SearchCubit>(context);
         // first validate gstin
-        if (searchBloc.validateGstin()) {
-          //then serch the detial
-          searchBloc.searchGstDetail(error: () {
-            Functions.showDialog(
-              context,
-              _scaffoldKey,
-              searchBloc.errorText,
-            );
-          }, success: () {
-            Functions.navigateTo(context, DetailUi());
-          });
-        } else {
-          Functions.showDialog(
-            context,
-            _scaffoldKey,
-            searchBloc.errorText,
-          );
+        if (searchCubit.state is SearchAdding) {
+          searchCubit.validateGstin(searchCubit.state);
         }
       },
     );
@@ -149,11 +141,5 @@ class _SearchUiState extends State<SearchUi> {
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    searchBloc.dispose();
   }
 }
