@@ -71,27 +71,31 @@ class _DetailUiState extends State<DetailUi> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          iconsWidget(),
-          AddressBody(),
+          Expanded(
+            flex: 1,
+            child: iconsWidget(),
+          ),
+          Expanded(
+            flex: 6,
+            child: AddressBody(),
+          ),
         ],
       ),
     );
   }
 
-  Expanded iconsWidget() {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          locationIcon(),
-          Container(
-            color: AppColors.lightGreen,
-            width: 0.8,
-            height: 60,
-          ),
-          placeIcon(),
-        ],
-      ),
+  Widget iconsWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        locationIcon(),
+        Container(
+          color: AppColors.lightGreen,
+          width: 0.8,
+          height: 60,
+        ),
+        placeIcon(),
+      ],
     );
   }
 
@@ -144,8 +148,14 @@ class _DetailUiState extends State<DetailUi> {
               children: [
                 SingleJuridiction(
                     title: Strings.stateJuridiction, value: stateJuti),
+                Spacer(
+                  flex: 1,
+                ),
                 SingleJuridiction(
                     title: Strings.centerJuridiction, value: centerJjuri),
+                Spacer(
+                  flex: 1,
+                ),
                 SingleJuridiction(title: Strings.taxPayerType, value: taxPay),
               ],
             );
